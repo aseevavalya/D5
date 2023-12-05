@@ -1,0 +1,72 @@
+{% extends 'flatpages/default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Posts
+{% endblock title %}
+
+{% block content %}
+   <h3><strong>ВСЕ ТЕКСТЫ</strong></h3>
+
+   <h4>{{ posts|length }}</h4>
+   <!-- Используем переданную из представления переменную time_now
+   и применяем к ней фильтр date. По назначению этот фильтр очень похож
+   на метод strftime у объекта datetime в Python — вывод времени
+   в указанном формате. -->
+   <h6> <div align="right"> {{ time_now|date:'M d Y' }}</div> </h6>
+   <hr>
+
+   {% if posts %}
+   <style type="text/css">
+   table {
+      width: 1000px;
+      border-collapse: collapse;
+      margin: auto;
+      border: 2px solid white;
+      }
+   td, th {
+      border: 1px solid dimGray;
+      padding: 1px;
+      text-align: center;
+      }
+   </style>
+
+       <table>
+           <tr>
+               <td>ЗАГОЛОВОК</td>
+               <td>ДАТА СОЗДАНИЯ</td>
+               <td>ТЕКСТ</td>
+           </tr>
+
+           {% for post in posts %}
+           <tr>
+               <td><h6>{{ post.title|censor }}</h6></td>
+               <td><small>{{ post.dateCreation }}</small></td>
+               <td>{{ post.text|censor|truncatewords:20 }}</td>
+           </tr>
+           {% endfor %}
+       </table>
+   {% else %}
+       <h2>НОВОСТЕЙ НЕТ!</h2>
+   {% endif %}
+
+   {% if page_obj.has_previous %}
+       <a href="?{% url_replace page=1 %}">1</a>
+       {% if page_obj.previous_page_number != 1 %}
+           ...
+           <a href="?{% url_replace page=page_obj.previous_page_number %}">{{ page_obj.previous_page_number }}</a>
+       {% endif %}
+   {% endif %}
+
+   {{ page_obj.number }}
+
+   {# Информация о следующих страницах #}
+   {% if page_obj.has_next %}
+       <a href="?{% url_replace page=page_obj.next_page_number %}">{{ page_obj.next_page_number }}</a>
+       {% if paginator.num_pages != page_obj.next_page_number %}
+           ...
+           <a href="?{% url_replace page=page_obj.paginator.num_pages %}">{{ page_obj.paginator.num_pages }}</a>
+       {% endif %}
+   {% endif %}
+{% endblock content %}
