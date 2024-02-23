@@ -16,5 +16,16 @@ POST
    {% else %}
        <h2>НОВОСТЕЙ НЕТ!</h2>
    {% endif %}
+   {% if post.categoryType == 'NW' %}
+      <td><a href="{% url 'news_update' post.id %}">Редактировать</a></td>
+   {% else %}
+      <td><a href="{% url 'article_update' post.id %}">Редактировать</a></td>
+   {% endif %}
+
+   {% if post.categoryType == 'NW' %}
+      <td><a href="{% url 'news_delete' post.id %}">Удалить</a></td>
+   {% else %}
+      <td><a href="{% url 'article_delete' post.id %}">Удалить</a></td>
+   {% endif %}
 
 {% endblock content %}

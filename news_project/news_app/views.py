@@ -1,5 +1,3 @@
-# Импортируем класс, который говорит нам о том,
-# что в этом представлении мы будем выводить список объектов из БД
 from datetime import datetime
 
 from django.urls import reverse_lazy
@@ -7,6 +5,8 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from .models import Post
 from .filters import PostFilter
 from .forms import PostForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
 class PostsList(ListView):
@@ -89,10 +89,13 @@ class PostSearch(ListView):
         return context
 
 
-class NewsCreate(CreateView):
+class NewsCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news_app.add_news',)
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'news_create.html'
+    context_object_name = 'news_create'
 
     def form_valid(self, form):
         news = form.save(commit=False)
@@ -100,10 +103,13 @@ class NewsCreate(CreateView):
         return super().form_valid(form)
 
 
-class ArticleCreate(CreateView):
+class ArticleCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news_app.add_article',)
+    raise_exception = True
     form_class = PostForm
     model = Post
     template_name = 'article_create.html'
+    context_object_name = 'article_create'
 
     def form_valid(self, form):
         news = form.save(commit=False)
@@ -111,16 +117,20 @@ class ArticleCreate(CreateView):
         return super().form_valid(form)
 
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news_app.change_news',)
     form_class = PostForm
     model = Post
     template_name = 'news_edit.html'
+    context_object_name = 'news_edit'
 
 
-class ArticleUpdate(UpdateView):
+class ArticleUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news_app.change_article',)
     form_class = PostForm
     model = Post
     template_name = 'article_edit.html'
+    context_object_name = 'article_edit'
 
 
 class NewsDelete(DeleteView):

@@ -9,6 +9,10 @@ Posts
 {% block content %}
    <h3><strong>ВСЕ ТЕКСТЫ</strong></h3>
 
+    <form action="" method="get">
+        <input type="submit" value="Найти" />
+    </form>
+
    <h4>{{ posts|length }}</h4>
    <!-- Используем переданную из представления переменную time_now
    и применяем к ней фильтр date. По назначению этот фильтр очень похож
